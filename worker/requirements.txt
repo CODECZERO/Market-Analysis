@@ -1,0 +1,91 @@
+# Core Web Framework & Async
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+aiohttp>=3.9.0
+httpx>=0.27.0
+
+# Database & Caching
+redis[hiredis]>=5.0.1
+pymongo>=4.6.1
+dnspython>=2.6.0
+motor>=3.3.2
+
+# Configuration & Utilities
+pydantic-settings>=2.4.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
+# Monitoring
+prometheus-client>=0.20.0
+
+# Core ML & Data Science
+numpy>=1.26.0
+pandas>=2.1.0
+scipy>=1.11.0
+scikit-learn>=1.5.0
+
+# Deep Learning (TensorFlow for LSTM & Transformer)
+tensorflow>=2.15.0
+keras>=3.0.0
+
+# Gradient Boosting & Tree Models
+xgboost>=2.0.0
+lightgbm>=4.0.0
+
+# Hyperparameter Optimization
+optuna>=3.5.0
+
+# Model Explainability
+shap>=0.44.0
+
+# Time Series & Statistical Analysis
+statsmodels>=0.14.0
+hmmlearn>=0.3.0
+
+# Technical Analysis
+TA-Lib>=0.4.28
+pandas-ta>=0.3.14b
+
+# NLP & Sentiment Analysis
+vaderSentiment>=3.3.2
+transformers>=4.36.0
+sentence-transformers>=2.3.0
+torch>=2.1.0
+
+# Indian Stock Market Data
+yfinance>=0.2.33
+nsetools>=1.0.11
+finnhub-python>=2.4.0
+
+# Social Media APIs
+praw>=7.7.0
+snscrape>=0.7.0
+
+# LangChain (keeping your existing integrations)
+langchain>=0.1.0
+langchain-community>=0.0.10
+langchain-google-genai>=0.0.1
+langchain-core>=0.1.0
+langchain-nvidia-ai-endpoints>=0.0.1
+langchain-openai>=0.0.1
+langchain-groq>=0.0.1
+langchain-ollama>=0.0.1
+
+# Token counting (for LLM cost tracking)
+tiktoken>=0.5.2
+
+# =============================================================================
+# Security (Phase 2)
+# =============================================================================
+
+# Rate Limiting
+slowapi>=0.1.9
+
+# =============================================================================
+# Performance (Phase 2)
+# =============================================================================
+
+# Faster JSON serialization (2-3x faster than standard json)
+orjson>=3.9.0
+

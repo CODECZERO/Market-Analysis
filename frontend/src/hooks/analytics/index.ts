@@ -1,0 +1,1 @@
+export { useAnalyticsPage } from "./useAnalyticsPage";

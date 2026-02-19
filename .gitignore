@@ -1,0 +1,70 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Logs
+logs/
+*.log
+
+# Environment - SECURITY CRITICAL
+.env
+.env.*
+.env.local
+.env.production
+.env.development
+.env.apikeys
+# Keep .env.example (template only)
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+
+# Docker
+.dockerignore
+
+# Test outputs
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Model files
+*.h5
+*.pkl
+*.joblib
+models/*.h5
+models/*.pkl
+
+# Data
+data/cache/
+*.csv
+*.json.bak
+
+# Archives
+*.zip
+*.tar.gz
+ultimate_market_analysis.zip
+
+# Runtime temporary files
+*.pid
+nohup.out
+startup.log
+temp/

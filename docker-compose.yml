@@ -1,0 +1,151 @@
+# Docker Compose Configuration
+# Orchestrates all services for Market Analysis System
+
+version: '3.8'
+
+services:
+  # MongoDB - TimeSeries database for stock data
+  mongodb:
+    image: mongo:6.0
+    container_name: market_analysis_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-admin123}
+      MONGO_INITDB_DATABASE: market_analysis
+    volumes:
+      - mongodb_data:/data/db
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - market_analysis_network
+
+  # Redis - Queue and caching
+  redis:
+    image: redis:7-alpine
+    container_name: market_analysis_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - market_analysis_network
+
+  # Python Worker - Analysis engine
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: market_analysis_worker
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      MONGODB_URI: mongodb://admin:${MONGO_PASSWORD:-admin123}@mongodb:27017/market_analysis?authSource=admin
+      REDIS_URL: redis://redis:6379
+      PYTHONUNBUFFERED: 1
+      # Low-memory GPU settings
+      TF_FORCE_GPU_ALLOW_GROWTH: "true"
+      TF_GPU_MEMORY_LIMIT: "3072"
+      CUDA_VISIBLE_DEVICES: "0"
+      # Use CPU for heavy operations
+      XGBOOST_USE_GPU: "false"
+      # Batch processing
+      BATCH_SIZE_TRAINING: "16"
+      BATCH_SIZE_INFERENCE: "8"
+      MAX_CONCURRENT_ANALYSES: "2"
+    volumes:
+      - ./worker:/app
+    # Resource limits for 4GB GPU system
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          memory: 2G
+    # GPU passthrough (if using nvidia-docker)
+    # runtime: nvidia
+    networks:
+      - market_analysis_network
+
+  # API Gateway - REST API
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: market_analysis_api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+      - redis
+      - worker
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGODB_URI: mongodb://admin:${MONGO_PASSWORD:-admin123}@mongodb:27017/market_analysis?authSource=admin
+      REDIS_URL: redis://redis:6379
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      NVIDIA_API_KEY: ${NVIDIA_API_KEY}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    networks:
+      - market_analysis_network
+
+  # Aggregator - Data collection
+  aggregator:
+    build:
+      context: ./aggregator
+      dockerfile: Dockerfile
+    container_name: market_analysis_aggregator
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://admin:${MONGO_PASSWORD:-admin123}@mongodb:27017/market_analysis?authSource=admin
+      REDIS_URL: redis://redis:6379
+      FINNHUB_API_KEY: ${FINNHUB_API_KEY}
+      REDDIT_CLIENT_ID: ${REDDIT_CLIENT_ID}
+      REDDIT_CLIENT_SECRET: ${REDDIT_CLIENT_SECRET}
+    volumes:
+      - ./aggregator:/app
+      - /app/node_modules
+    networks:
+      - market_analysis_network
+
+  # Frontend - React UI
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: market_analysis_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - api-gateway
+    environment:
+      REACT_APP_API_URL: http://localhost:3000/api
+    networks:
+      - market_analysis_network
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  market_analysis_network:
+    driver: bridge

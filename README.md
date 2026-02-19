@@ -47,44 +47,66 @@ graph TD
 
 ---
 
-## 🚀 Quick Start
+---
 
-### 🐧 Linux / Mac
-One command to install dependencies, start backend services, and launch the CLI:
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.10 or higher
+- Node.js (for frontend/dashboard)
+- Redis (optional, for caching)
+
+### Installation & Launch
+The easiest way to start is using the **Ultimate Launcher**:
+
+**Linux / Mac:**
 ```bash
 ./ultimate.sh
 ```
-*Prompts for stock symbol (Default: `RELIANCE.NS`)*
 
-### 🪟 Windows
-Double-click `ultimate.bat` or run from CMD:
+**Windows:**
 ```cmd
 ultimate.bat
 ```
-*Auto-installs Python requirements if missing.*
 
 ---
 
-## 🧠 Key Technologies
+## 🛠️ Script Toolbox
 
-### 1. 🔮 Crystal Ball (Intraday Forecasting)
-Uses high-frequency simulation to project price action **60 minutes** into the future.
-- **Model**: Linear Regression on Volatility-Adjusted Returns.
-- **Data**: 1-minute interval granularity.
+The project includes several scripts to manage the full lifecycle of the platform:
 
-### 2. 🕸️ Causal Intelligence Chain
-Doesn't just look at price. Validates the **"Why"**:
-- **Macro**: Scans for global risks (War, Sanctions, Weather).
-- **Forensics**: Checks for accounting irregularities.
-- **Graph**: Traces supply chain dependencies (e.g., Oil Price -> Paint Stocks).
+| Script | Description |
+| :--- | :--- |
+| `run-full-system.sh` | **Recommended.** Starts all services (API, Aggregator, Worker) in the background. |
+| `start-all.sh` | Orchestrates the startup of all core backend components. |
+| `stop-all.sh` | Cleanly terminates all running services. |
+| `monitor.sh` | Real-time health and performance monitoring of active services. |
+| `test-all.sh` | Runs the full suite of integration and unit tests. |
+| `setup.sh` | Initial environment setup and dependency installation. |
 
-### 3. 🛡️ Quantitative Rigor (CS229)
-Models are mathematically verified:
-- **LSTM**: Uses **Z-Score Normalization** (`(x-μ)/σ`) and **Huber Loss**.
-- **XGBoost**: Uses **Scale_Pos_Weight** to correct for the rarity of profitable trade signals.
-- **Regularization**: L1/L2 penalties to prevent overfitting.
+### Running the Full System
+To see the full script in action and run all services:
+```bash
+# Set permissions if needed
+chmod +x *.sh
+
+# Run the full system
+./run-full-system.sh
+```
 
 ---
+
+## 📂 Documentation
+
+Detailed documentation for various components can now be found in the [docs/](docs/) directory:
+
+- [API Specification](docs/API_SPEC.md)
+- [Database Schema](docs/DATABASE_SCHEMA.md)
+- [ML Models Overview](docs/ML_MODELS.md)
+- [Integration Guide](docs/INTEGRATION_GUIDE.md)
+- [Deployment Instructions](docs/DEPLOYMENT.md)
+- [And many more...](docs/)
+
 
 ## 📂 Project Structure
 
